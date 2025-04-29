@@ -209,7 +209,6 @@ Progress:
         // Options for html2canvas (optional, but can help with quality/background)
         const options = {
             backgroundColor: '#1e1e1e', // Match the section background
-            scale: 2, // Increase scale for better resolution (optional)
             useCORS: true // Important if you ever use external images/fonts
         };
 
