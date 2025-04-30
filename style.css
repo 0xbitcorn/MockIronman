@@ -18,10 +18,10 @@ body {
 .github-link a {
     text-decoration: none;
     color: #6e9765b0;
-    font-size: 1em;
+    font-size: 0.69em;
     font-weight: bold;
     transition: color 0.3s ease;
-    font-family: monospace;
+    font-family: system-ui;
     font-style: italic;
 }
 
