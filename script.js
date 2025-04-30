@@ -96,6 +96,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderTable() {
         tableBody.innerHTML = '';
+        const headers = Array.from(document.querySelectorAll('.table-container th')).map(th => th.textContent.trim()); // Trim whitespace
+
         workouts.forEach((workout) => {
             const row = tableBody.insertRow();
             row.id = `workout-row-${workout.id}`;
@@ -110,12 +112,19 @@ document.addEventListener('DOMContentLoaded', () => {
             checkbox.addEventListener('change', handleCheckboxChange);
             cellCheckbox.appendChild(checkbox);
 
-            // Workout #, Activity
-            row.insertCell().textContent = workout.id;
-            row.insertCell().textContent = workout.activity;
+            // Workout # Cell
+            const cellId = row.insertCell();
+            cellId.setAttribute('data-label', headers[1] || 'Workout #'); // Add data-label
+            cellId.textContent = workout.id;
+
+            // Activity Cell
+            const cellActivity = row.insertCell();
+            cellActivity.setAttribute('data-label', headers[2] || 'Activity'); // Add data-label
+            cellActivity.textContent = workout.activity;
 
             // Planned Value (Uses the dynamically calculated currentPlanned...)
             const cellPlanned = row.insertCell();
+            cellPlanned.setAttribute('data-label', headers[3] || 'Goal'); // Add data-label
             if (workout.activity === 'SWIM') {
                 // Ensure currentPlannedLaps is a number before displaying
                 cellPlanned.textContent = `${Number(workout.currentPlannedLaps).toFixed(0)} laps`;
@@ -132,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Actual Input Value
             const cellActual = row.insertCell();
+            cellActual.setAttribute('data-label', headers[4] || 'Actual'); // Add data-label
             const input = document.createElement('input');
             input.type = 'number';
             input.step = workout.activity === 'SWIM' ? '1' : '0.1';

@@ -101,9 +101,8 @@ body {
 /* --- End Alternative Toggle Styles --- */
 
 .progress-title{
-    font-size: 2em;
+    font-size: 2.25em;
     font-weight: bold;
-    text-align: center;
     margin-bottom: 25px;
 }
 
@@ -251,6 +250,7 @@ tr.completed input[type="checkbox"] {
 
 #generate-share-text,
 #generate-image-btn {
+    width: 15vw;
     padding: 10px 20px;
     font-size: 1em;
     cursor: pointer;
@@ -272,8 +272,8 @@ tr.completed input[type="checkbox"] {
 
 #share-text-output {
     width: 90%;
-    max-width: 500px;
-    margin: 0 auto;
+    max-width: 30vw;
+    margin: 10px auto;
     display: block;
     font-family: monospace;
     font-size: 0.9em;
@@ -329,4 +329,224 @@ td input[type="number"]:disabled {
     color: #777;
     cursor: not-allowed;
     border-color: #444;
+}
+
+/* ==========================
+   Mobile Styles (Responsive)
+   ========================== */
+
+/* Apply styles for screens up to 768px wide (tablets and phones) */
+@media screen and (max-width: 768px) {
+
+    body {
+        width: 90%; /* Use more screen width */
+        margin: 10px auto; /* Reduce top/bottom margin */
+        font-size: 14px; /* Slightly smaller base font */
+    }
+
+    .github-link {
+        margin-top: -10px;
+    }
+
+    /* --- Mobile Progress Section --- */
+    .progress-section {
+        padding: 15px 15px; /* Reduce padding */
+    }
+
+    .progress-title {
+        font-size: 1.6em; /* Smaller title */
+        margin-bottom: 20px;
+        padding-top: 5px; /* Ensure space below toggle */
+        text-align: left;
+    }
+
+    .goal-toggle-container {
+        top: 20px; /* Adjust position */
+        right: 20px;
+        /* Optional: Scale switch slightly if needed */
+        /* transform: scale(0.9); */
+    }
+    .goal-toggle-label {
+        font-size: 0.8em;
+    }
+
+    .overall-label,
+    .activity-progress label {
+        font-size: 1.2em; /* Smaller labels */
+    }
+
+    .dynamic-progress-text {
+        font-size: 0.8em; /* Smaller sub-text */
+        margin-top: 0; /* Adjust spacing */
+    }
+
+    .progress-icon {
+        width: 45px; /* Smaller icons */
+        height: 45px;
+    }
+
+    .progress-container {
+        margin: 10px auto; /* Reduce vertical margin */
+    }
+    .overall-progress {
+        height: 12px; /* Thinner overall bar */
+    }
+
+    /* --- Mobile Share Section --- */
+    .share-section {
+        margin-top: 10px;
+    }
+
+    #generate-share-text,
+    #generate-image-btn {
+        width: 40vw;
+        padding: 9px 16px;
+        font-size: 0.9em;
+        margin: 5px;
+        display: inline-block;
+        max-width: 50%;
+    }
+
+    #share-text-output {
+        max-width: unset;
+        font-size: 0.8em;
+    }
+
+    /* --- Mobile Table Styles (Card Layout) --- */
+    .table-container {
+        border: none;
+        box-shadow: none;
+        padding: 0;
+        margin-top: 20px;
+    }
+
+    table {
+        border: none;
+        box-shadow: none;
+        width: 100%;
+    }
+
+    table thead {
+        display: none; /* Hide table headers */
+    }
+
+    table tr {
+        display: block; /* Rows become blocks (cards) */
+        margin-bottom: 15px;
+        border: 1px solid #444;
+        border-radius: 5px;
+        background-color: #2a2a2a; /* Card background */
+        padding: 10px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    /* Apply completed style to whole card */
+    table tr.completed {
+        background-color: #1874086e;
+        border-color: #39FF14;
+    }
+
+    table td {
+        display: block; /* Cells stack vertically */
+        text-align: right; /* Data aligns right */
+        font-size: 0.95em;
+        border: none;
+        border-bottom: 1px dotted #555; /* Separator line */
+        padding: 10px 5px 10px 50%; /* Space on left for label */
+        position: relative;
+        min-height: 35px; /* Ensure height for alignment */
+        box-sizing: border-box;
+    }
+
+    table td:last-child {
+        border-bottom: none; /* No line after last cell in card */
+    }
+
+    /* Add the label using the data-label attribute */
+    table td::before {
+        content: attr(data-label); /* Get text from data-label */
+        position: absolute;
+        left: 10px;
+        top: 50%; /* Center vertically */
+        transform: translateY(-50%);
+        width: 45%; /* Adjust as needed */
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #ccc;
+    }
+
+    /* Specific cell adjustments */
+    table td:nth-of-type(1) { /* Completed Checkbox */
+         text-align: center;
+         padding-left: 0;
+         min-height: 40px;
+    }
+     table td:nth-of-type(1)::before {
+         display: none; /* Hide label for checkbox */
+     }
+     table td:nth-of-type(1) input[type="checkbox"] {
+         transform: scale(1.8); /* Make checkbox easier to tap */
+     }
+
+    table td:nth-of-type(5) { /* Actual Input */
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+     table td:nth-of-type(5) input[type="number"] {
+         width: 100%; /* Input takes available space */
+         max-width: 110px; /* Limit max width */
+         float: right;
+         padding: 6px;
+         font-size: 1em; /* Ensure readable font size */
+     }
+
+     /* Ensure strikethrough applies correctly */
+     table tr.completed td:nth-of-type(4) { /* Planned cell */
+         text-decoration: line-through;
+         text-decoration-color: #90ee90;
+     }
+     table tr.completed td:nth-of-type(4)::before {
+         text-decoration: none; /* Don't strike through label */
+     }
+
+    /* --- End Mobile Table Styles --- */
+}
+
+/* Optional: Styles for even smaller screens if needed */
+@media screen and (max-width: 480px) {
+    body {
+        width: 90%;
+        font-size: 13px;
+    }
+    .github-link {
+        margin-top: -5px;
+    }
+    .progress-title {
+        font-size: 1.4em;
+    }
+    .overall-label,
+    .activity-progress label {
+        font-size: 1.1em;
+    }
+    .progress-icon {
+        width: 35px;
+        height: 35px;
+    }
+    table td {
+        font-size: 0.9em;
+        padding-left: 45%; /* Adjust label spacing */
+    }
+    table td::before {
+        width: 40%;
+    }
+    #generate-share-text,
+    #generate-image-btn {
+        width: 90vw;
+        max-width: 95%;
+        margin: 8px 5px;
+    }
+    #share-text-output {
+        max-width: unset;
+    }
 }
