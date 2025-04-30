@@ -8,6 +8,27 @@ body {
     justify-self: center;
 }
 
+.github-link {
+    display: flex;
+    justify-content: center;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+.github-link a {
+    text-decoration: none;
+    color: #6e9765b0;
+    font-size: 1em;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    font-family: monospace;
+    font-style: italic;
+}
+
+.github-link a:hover {
+    color: #6e9765;
+}
+
 .progress-section {
     background-color: #1e1e1e;
     padding: 20px 50px;
