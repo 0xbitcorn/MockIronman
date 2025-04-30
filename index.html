@@ -5,13 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mock Ironman Progress</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 </head>
 <body>
     <div class="progress-section" id="progress-capture-area">
+        <div class="goal-toggle-container">
+            <label class="goal-toggle-label" for="goal-toggle-input">HALF</label>
+            <div class="toggle-switch-alt" id="goal-toggle-container-div"> <!-- Container for click handling -->
+                <input type="checkbox" id="goal-toggle-input"> <!-- Hidden input -->
+                <div class="toggle-track">
+                    <div class="toggle-knob"></div> <!-- Visible knob -->
+                </div>
+            </div>
+            <label class="goal-toggle-label" for="goal-toggle-input">FULL</label>
+        </div>
         <div class="progress-title">MOCK IRONMAN</div>
         <label for="overall-progress-bar" class="overall-label">
-            OVERALL PROGRESS<span class="dynamic-progress-text" id="overall-progress-text">0%</span>
+            OVERALL PROGRESS<span class="dynamic-progress-text" id="overall-progress-text">0% COMPLETE</span>
         </label>
         <div class="progress-container overall-progress">
             <div class="progress-bar" id="overall-progress-bar">
@@ -65,8 +74,8 @@
                     <th>COMPLETED?</th>
                     <th>WORKOUT #</th>
                     <th>ACTIVITY</th>
-                    <th>MILES</th>
-                    <th>LAPS (SWIM)</th>
+                    <th>GOAL</th>
+                    <th>ACTUAL</th>
                 </tr>
             </thead>
             <tbody id="workout-table-body">
@@ -74,7 +83,7 @@
             </tbody>
         </table>
     </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="script.js"></script>
 </body>
 </html>

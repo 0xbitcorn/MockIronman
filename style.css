@@ -4,7 +4,7 @@ body {
     margin: 20px;
     background-color: #121212;
     color: #e0e0e0;
-    width: 80%;
+    width: 60%;
     justify-self: center;
 }
 
@@ -12,9 +12,72 @@ body {
     background-color: #1e1e1e;
     padding: 20px 50px;
     border-radius: 8px;
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
     border: 1px solid #333;
+    position: relative;
 }
+
+/* --- Goal Toggle Styles --- */
+.goal-toggle-container {
+    position: absolute;
+    top: 35px;
+    right: 35px;
+    display: flex;
+    align-items: center;
+    z-index: 10;
+}
+
+.goal-toggle-label {
+    margin: 0 8px;
+    font-size: 0.9em;
+    color: #ccc;
+    cursor: pointer;
+    user-select: none;
+}
+
+.toggle-switch-alt {
+    width: 50px;
+    height: 24px;
+    position: relative;
+    cursor: pointer;
+}
+
+.toggle-switch-alt input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-track {
+    width: 100%;
+    height: 100%;
+    background-color: #555;
+    border-radius: 24px;
+    transition: background-color 0.4s;
+    position: absolute;
+    top: 0; left: 0;
+}
+
+.toggle-knob {
+    width: 18px;
+    height: 18px;
+    background-color: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px;
+    left: 3px; /* Start position */
+    transition: left 0.4s ease; /* Animate left property */
+}
+
+/* Change track color and knob position when checked */
+.toggle-switch-alt input:checked + .toggle-track {
+    background-color: #FF10F0; /* Active color */
+}
+
+.toggle-switch-alt input:checked + .toggle-track .toggle-knob {
+    left: 29px; /* End position (width - knob_width - left_margin) = 50 - 18 - 3 */
+}
+/* --- End Alternative Toggle Styles --- */
 
 .progress-title{
     font-size: 2em;
@@ -61,7 +124,6 @@ body {
     border-radius: 15px;
     height: 5px;
     position: relative;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
     margin: 30px auto;
 }
 
@@ -212,15 +274,38 @@ tr.completed input[type="checkbox"] {
     z-index: 2;
 }
 
-thead th:nth-child(1) { width: 20%; } /* Complete? */
-thead th:nth-child(2) { width: 20%; } /* Workout # */
-thead th:nth-child(3) { width: 20%; } /* Activity */
-thead th:nth-child(4) { width: 20%; } /* Miles */
-thead th:nth-child(5) { width: 20%; } /* Laps (Swim) */
+thead th:nth-child(1) { width: 10%; } /* Complete? */
+thead th:nth-child(2) { width: 15%; } /* Workout # */
+thead th:nth-child(3) { width: 15%; } /* Activity */
+thead th:nth-child(4) { width: 30%; } /* Planned */
+thead th:nth-child(5) { width: 30%; } /* Actual */
 
-.progress-section.capture-width {
-    width: 741px;
-    max-width: 741px;
-    margin: 0 auto 30px auto;
+/* Style for input fields in table */
+td input[type="number"] {
+    width: 80%;
+    padding: 5px;
+    background-color: #333;
+    color: #e0e0e0;
+    border: 1px solid #555;
+    border-radius: 4px;
+    text-align: center;
     box-sizing: border-box;
+    appearance: textfield; /* Standard property for compatibility */
+    -moz-appearance: textfield; /* Hide spinners in Firefox */
+
+}
+
+/* Hide spinners in Chrome, Safari, Edge */
+td input[type="number"]::-webkit-outer-spin-button,
+td input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Style disabled inputs */
+td input[type="number"]:disabled {
+    background-color: #2a2a2a;
+    color: #777;
+    cursor: not-allowed;
+    border-color: #444;
 }
