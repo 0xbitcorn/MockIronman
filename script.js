@@ -426,22 +426,24 @@ document.addEventListener('DOMContentLoaded', () => {
             if (lastWorkout) { // Check if found
                 const actualVal = lastWorkout.activity === 'SWIM' ? `${lastWorkout.actualLaps ?? '?'} laps (${actualCompletedSwimMiles.toFixed(2)} mi)` : `${(lastWorkout.actualMiles ?? 0).toFixed(1)} mi`;
                 const goalValText = lastWorkout.activity === 'SWIM' ? `${lastWorkout.currentPlannedLaps} laps (${lastWorkout.currentPlannedMiles.toFixed(2)} mi)` : `${lastWorkout.currentPlannedMiles.toFixed(1)} mi`;
-                lastWorkoutText = `Just finished ${lastWorkout.activity} WORKOUT #${lastWorkout.id}\nGOAL: ${goalValText}, COMPLETED: ${actualVal}`;
+                if (goalValText == actualVal) {
+                    lastWorkoutText = `${lastWorkout.activity} WORKOUT #${lastWorkout.id}✅\n${goalValText}`;
+                } else {
+                    lastWorkoutText = `${lastWorkout.activity} WORKOUT #${lastWorkout.id} ✅\nGOAL: ${goalValText}\nCOMPLETED: ${actualVal}`;
+                }
             }
         }
 
-        const text = `MOCK IRONMAN UPDATE
-${lastWorkoutText}
+        const text = `${lastWorkoutText}
 
-${goalName} IRONMAN PROGRESS:
+MOCK ${goalName} IRONMAN PROGRESS:
 🏊 Swim: ${actualCompletedSwimMiles.toFixed(2)} mi / ${targetSwimMiles.toFixed(2)} mi (${swimPercent.toFixed(1)}%)
 🚴 Bike: ${actualCompletedBikeMiles.toFixed(1)} mi / ${targetBikeMiles.toFixed(0)} mi (${bikePercent.toFixed(1)}%)
 🏃 Run: ${actualCompletedRunMiles.toFixed(1)} mi / ${targetRunMiles.toFixed(1)} mi (${runPercent.toFixed(1)}%)
-🏁 Overall: ${overallPercent.toFixed(1)}% [Avg]
+🏁 Overall: ${overallPercent.toFixed(1)}%
 
 Want to join me? Do it!
-👉 mockman.tiiny.site
-`;
+👉 mockman.tiiny.site`;
         shareTextOutput.value = text;
 
         if (navigator.clipboard && navigator.clipboard.writeText) {
