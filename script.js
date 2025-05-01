@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const LAPS_PER_MILE = 32.2;
     const fullIronmanDistances = { swim: 2.4, bike: 112, run: 26.2 };
     let goalMultiplier = 1.0; // 1.0 for Full, 0.5 for Half
+    let completionOrder = []; // Track the order of completed workouts
 
     // --- Workout Data Structure Update ---
     const workouts = [
@@ -66,6 +67,10 @@ document.addEventListener('DOMContentLoaded', () => {
         goalMultiplier = (savedMultiplier === '0.5' || savedMultiplier === '1') ? parseFloat(savedMultiplier) : 1.0;
         goalToggleInput.checked = (goalMultiplier === 1.0); // Set toggle state
 
+        // Load completion order
+        const savedOrder = localStorage.getItem('completionOrder');
+        completionOrder = savedOrder ? JSON.parse(savedOrder) : [];
+
         workouts.forEach(workout => {
             const savedCompleted = localStorage.getItem(`workout_${workout.id}_completed`);
             workout.completed = savedCompleted !== null ? JSON.parse(savedCompleted) : workout.completed;
@@ -79,6 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function saveState() {
         localStorage.setItem('goalMultiplier', goalMultiplier.toString());
+        saveCompletionOrder();
+    }
+
+    function saveCompletionOrder() {
+        localStorage.setItem('completionOrder', JSON.stringify(completionOrder));
+        console.log("Saved Completion Order:", completionOrder); // Debug log
     }
 
     function saveWorkoutCompletion(workoutId, isCompleted) {
@@ -130,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 cellPlanned.textContent = `${Number(workout.currentPlannedLaps).toFixed(0)} laps`;
             } else {
                 // Ensure currentPlannedMiles is a number before displaying
-                cellPlanned.textContent = `${Number(workout.currentPlannedMiles).toFixed(1)} mi`;
+                cellPlanned.textContent = `${Number(workout.currentPlannedMiles).toFixed(1)} miles`;
             }
             if (workout.completed) {
                 cellPlanned.style.textDecoration = 'line-through';
@@ -172,9 +183,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!workout) return;
 
         workout.completed = isChecked;
-        saveWorkoutCompletion(workoutId, isChecked);
+        saveWorkoutCompletion(workoutId, isChecked); // Save individual completion status
 
-        // --- Run updateProgress FIRST to calculate adjusted planned values ---
+        // --- Update Completion Order ---
+        if (isChecked) {
+            // Remove first if it exists (safety check), then add to end
+            completionOrder = completionOrder.filter(id => id !== workoutId);
+            completionOrder.push(workoutId);
+        } else {
+            // Remove from order if unchecked
+            completionOrder = completionOrder.filter(id => id !== workoutId);
+        }
+        saveCompletionOrder(); // Save the updated order array
+        // --- End Update Completion Order ---
+
         updateProgress();
 
         // --- Pre-fill logic AFTER table is re-rendered ---
@@ -367,12 +389,15 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("--- updateProgress Finished ---");
     }
 
-    // (generateShareText and generateImage functions remain the same)
     function generateShareText() {
+        if (completionOrder.length === 0) {
+            alert("No completed workouts to share. Please complete at least one workout.");
+            return;
+        }
         const targetSwimMiles = fullIronmanDistances.swim * goalMultiplier;
         const targetBikeMiles = fullIronmanDistances.bike * goalMultiplier;
         const targetRunMiles = fullIronmanDistances.run * goalMultiplier;
-        const targetSwimLaps = targetSwimMiles * LAPS_PER_MILE;
+        const targetSwimLaps = Math.ceil(targetSwimMiles * LAPS_PER_MILE);
         const goalName = goalMultiplier === 1.0 ? 'FULL' : 'HALF';
 
         let actualCompletedSwimLaps = 0;
@@ -394,24 +419,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const lastCompletedWorkout = workouts.slice().reverse().find(w => w.completed);
         let lastWorkoutText = '';
-        if (lastCompletedWorkout) {
-            const actualVal = lastCompletedWorkout.activity === 'SWIM' ? `${lastCompletedWorkout.actualLaps ?? '?'} laps` : `${(lastCompletedWorkout.actualMiles ?? 0).toFixed(1)} mi`;
-            lastWorkoutText = `Just finished workout #${lastCompletedWorkout.id} (${lastCompletedWorkout.activity} - ${actualVal})! `;
+        if (completionOrder.length > 0) {
+            const lastWorkoutId = completionOrder[completionOrder.length - 1]; // Get last ID from array
+            const lastWorkout = workouts.find(w => w.id === lastWorkoutId); // Find the workout object
+
+            if (lastWorkout) { // Check if found
+                const actualVal = lastWorkout.activity === 'SWIM' ? `${lastWorkout.actualLaps ?? '?'} laps (${actualCompletedSwimMiles.toFixed(2)} mi)` : `${(lastWorkout.actualMiles ?? 0).toFixed(1)} mi`;
+                const goalValText = lastWorkout.activity === 'SWIM' ? `${lastWorkout.currentPlannedLaps} laps (${lastWorkout.currentPlannedMiles.toFixed(2)} mi)` : `${lastWorkout.currentPlannedMiles.toFixed(1)} mi`;
+                lastWorkoutText = `Just finished ${lastWorkout.activity} WORKOUT #${lastWorkout.id}\nGOAL: ${goalValText}, COMPLETED: ${actualVal}`;
+            }
         }
 
-        const text = `MOCK IRONMAN UPDATE (${goalName} Goal)
+        const text = `MOCK IRONMAN UPDATE
 ${lastWorkoutText}
 
-Progress:
-🏊 Swim: ${actualCompletedSwimLaps} laps / ${targetSwimLaps.toFixed(0)} laps (${swimPercent.toFixed(1)}%)
+${goalName} IRONMAN PROGRESS:
+🏊 Swim: ${actualCompletedSwimMiles.toFixed(2)} mi / ${targetSwimMiles.toFixed(2)} mi (${swimPercent.toFixed(1)}%)
 🚴 Bike: ${actualCompletedBikeMiles.toFixed(1)} mi / ${targetBikeMiles.toFixed(0)} mi (${bikePercent.toFixed(1)}%)
 🏃 Run: ${actualCompletedRunMiles.toFixed(1)} mi / ${targetRunMiles.toFixed(1)} mi (${runPercent.toFixed(1)}%)
 🏁 Overall: ${overallPercent.toFixed(1)}% [Avg]
-`;
 
+Want to join me? Do it!
+👉 mockman.tiiny.site
+`;
         shareTextOutput.value = text;
-        shareTextOutput.select();
+
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Share text copied to clipboard successfully!');
+                // Optional: Provide visual feedback to the user
+                const originalButtonText = generateShareBtn.textContent;
+                generateShareBtn.textContent = 'Copied!'; // Change button text
+                generateShareBtn.classList.add('active-button'); // Add a class for styling
+                setTimeout(() => {
+                    generateShareBtn.textContent = originalButtonText;
+                    generateShareBtn.classList.remove('active-button'); // Remove the class after timeout
+                }, 1500); // Change back after 1.5 seconds
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+                // Fallback or just notify user if needed
+                alert('Could not copy text automatically. Please copy from the text box.');
+                // Still populate the textarea and select it as a fallback
+                shareTextOutput.select();
+            });
+        } else {
+            shareTextOutput.select();
+        }
+
     }
+
     function generateImage() {
         if (!progressCaptureArea || !html2canvas) {
             console.error("Required element or library not found.");
@@ -419,7 +475,7 @@ Progress:
             return;
         }
         generateImageBtn.disabled = true;
-        generateImageBtn.textContent = 'Generating...';
+        generateImageBtn.textContent = 'Processing...';
         const options = {
             backgroundColor: '#1e1e1e',
             useCORS: true,
@@ -435,12 +491,12 @@ Progress:
             downloadLink.click();
             document.body.removeChild(downloadLink);
             generateImageBtn.disabled = false;
-            generateImageBtn.textContent = 'Generate Progress Image';
+            generateImageBtn.textContent = 'Get Progress Image';
         }).catch(error => {
             console.error('Error generating image with html2canvas:', error);
             alert('Sorry, an error occurred while generating the image.');
             generateImageBtn.disabled = false;
-            generateImageBtn.textContent = 'Generate Progress Image';
+            generateImageBtn.textContent = 'Get Progress Image';
         });
     }
 
