@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORKOUTenstein 3D - Random Workout Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="difficulty-title">How tough are you?</h1>
+
+        <div class="difficulty-selector">
+            <div class="options-container">
+                <label data-difficulty="easy">
+                    <span class="selector"></span> Can I play, Daddy?
+                </label>
+                <label data-difficulty="medium">
+                    <span class="selector"></span> Don't hurt me.
+                </label>
+                <label data-difficulty="hard">
+                    <span class="selector"></span> Bring 'em on!
+                </label>
+                <label data-difficulty="extreme">
+                    <span class="selector"></span> I am Death incarnate!
+                </label>
+            </div>
+            <div class="gap"></div>
+            <div id="difficulty-sprite-container">
+                <div id="difficulty-sprite"></div>
+            </div>
+        </div>
+
+        <div id="generated-workout">
+            <div id="workout-output">
+                <h2>WORKOUT</h2>
+                <ul id="workout-list">
+                    <!-- Workouts will be listed here -->
+                </ul>
+            </div>
+            <div id="workout-refresh">
+                <button id="generate-btn"></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

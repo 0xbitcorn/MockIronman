@@ -1,0 +1,280 @@
+body {
+    background-color: #800000; /* Dark red background */
+    color: #cccccc;          /* Light grey text */
+    font-family: 'Press Start 2P', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    image-rendering: pixelated;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeSpeed;
+}
+
+.container {
+    text-align: center;
+    width: 80%;
+    max-width: 850px;
+}
+
+.difficulty-title {
+    color: #ffff00; /* Yellow title */
+    font-size: 2em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px #333; /* Simple shadow */
+    line-height: 1.2;
+}
+
+.difficulty-selector {
+    justify-self: anchor-center;
+    background-color: #a00000; /* Slightly lighter red box */
+    border: 3px solid #500000; /* Darker border */
+    padding: 20px;
+    display: flex; /* Use Flexbox for layout */
+    align-items: center; /* Vertically align items */
+    text-align: left;
+    width: 100%;
+}
+
+.options-container {
+    width: 75%;
+}
+
+.gap {
+    width: 10%;
+}
+
+
+#difficulty-sprite-container{
+    width: 15%;
+    display: flex;
+    justify-content: center;
+}
+
+.difficulty-selector label {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #cccccc;
+    background-color: transparent;
+    transition: background-color 0.2s, color 0.2s;
+    gap: 20px;
+}
+
+/* Hover state */
+.difficulty-selector label:hover {
+    color: white; /* Yellow text on hover */
+    background-color: #50000050; /* Darker red background on hover */
+}
+
+/* Active state (when selected) */
+.difficulty-selector label.active-difficulty {
+    color: white; /* Yellow text for active */
+    background-color: #500000; /* Darker red background for active */
+}
+
+/* --- Styles for the Sprite --- */
+#difficulty-sprite {
+    width: 96px;  /* Width of ONE face in the sprite */
+    height: 128px; /* Height of ONE face in the sprite */
+    background-image: url('difficulty.png'); /* YOUR sprite image */
+    background-repeat: no-repeat;
+    flex-shrink: 0; /* Prevent sprite from shrinking */
+    border: 3px solid #500000;
+
+    /* Default to Easy position (Top-Left) */
+    background-position: 0 0;
+}
+
+/* Classes to shift the background position */
+#difficulty-sprite.sprite-easy { background-position: 0 0; }
+#difficulty-sprite.sprite-medium { background-position: -96px 0; }
+#difficulty-sprite.sprite-hard { background-position: 0 -128px; }
+#difficulty-sprite.sprite-extreme { background-position: -96px -128px; }
+
+#generate-btn {
+    background-color: #a00000;
+    color: #cccccc;
+    border: 3px solid #500000;
+    font-size: 4em;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    width: 102px;
+    height: 134px;
+    justify-self: center;
+    flex-shrink: 0;
+    background-image: url('generate.png');
+    background-size: 40px 40px;
+    background-repeat: no-repeat;
+    background-position: center; /* Center the icon */
+}
+
+#generate-btn:hover {
+    background-color: #800000;
+}
+
+#generated-workout{
+    justify-self: anchor-center;
+    background-color: #700000;
+    border: 3px solid #500000;
+    padding: 20px;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    width: 100%;
+}
+
+#workout-output {
+    width:85%;
+    text-align: center;
+}
+
+#workout-output h2 {
+    margin-top: 0;
+    color: white; /* Yellow heading */
+}
+
+#workout-list {
+    list-style: none; /* Remove bullet points */
+    padding: 0;
+    margin: 0;
+}
+
+#workout-list li {
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+#workout-refresh {
+    width:15%;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+.selector {
+    display: inline-block;
+    width: 24px;
+    height: 16px;
+    background-image: url('selector.png');
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: 24px 48px;
+    flex-shrink: 0; /* Prevent sprite from shrinking */
+    background-position: 0 -32px;
+    scale: 2;
+}
+
+/* Hover state (when label is hovered, but NOT active) */
+/* Target the .selector INSIDE a hovered label */
+.difficulty-selector label:hover .selector {
+    /* Middle gun image */
+    /* Shifts background up by 1 frame height */
+    background-position: 0 -16px;
+}
+
+/* Active state (when label HAS .active-difficulty class) */
+/* Target the .selector INSIDE an active label */
+/* IMPORTANT: This rule MUST come AFTER the hover rule, or have higher specificity, */
+/*            to ensure the active gun shows even when hovering the active item. */
+.difficulty-selector label.active-difficulty .selector {
+    /* Top gun image */
+    background-position: 0 0;
+}
+
+/* --- Media Query for Mobile Devices (468px and below) --- */
+@media (max-width: 468px) {
+
+    body {
+        font-size: 0.69em;
+    }
+
+    .container {
+        width: unset;
+    }
+
+    .difficulty-title {
+        font-size: 1.5em;
+    }
+
+    .difficulty-selector {
+        width: fit-content;
+        max-width: 85vw;
+        padding: 0px;
+        justify-self: anchor-center;
+    }
+
+    .options-container {
+        width: auto;
+    }
+
+    #difficulty-sprite-container {
+        width: fit-content;
+    }
+
+    .difficulty-selector label {
+        font-size: 0.85em;
+        padding: 8.75px;
+    }
+
+    .gap {
+        display: none; /* Hide the spacer div on mobile */
+    }
+
+    /* Generated Workout Area */
+    #generated-workout {
+        justify-self: center;
+        width: 85vw;
+        padding: 0px 0px 15px 0px;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #workout-output {
+        width: 100%; /* Take full width */
+        min-height: 15vh;
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #workout-refresh {
+        width: unset;
+        display: flex;
+        margin-top: 10px;
+        justify-content: center;
+    }
+
+    #generate-btn {
+        display: flex;
+        justify-content: center;
+        justify-self: center;
+        width: 69vw; /* Make button wide but not full screen width */
+        height: 21vw;
+        padding: 20px; /* Adjust padding */
+        font-size: 3.5em; /* Reduce icon size inside button */
+    }
+
+} /* --- End of @media query --- */
+
+
+/* --- Media Query for Mobile Devices (375px and below) --- */
+@media (max-width: 400px) {
+    .difficulty-selector {
+        max-width: unset;
+    }
+
+    #generated-workout {
+        width: 100vw;
+    }
+
+} /* --- End of @media query --- */
